@@ -1,0 +1,6 @@
+[package]
+name = "game-of-life"
+version = "0.1.0"
+authors = ["ros <ros65536@gmail.com>"]
+
+[dependencies]
