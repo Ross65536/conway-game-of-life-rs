@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::env;
-use grid::GridState;
-use grid::CellState;
+
+use game::grid_state::GridState;
 
 pub fn parse_command_line() -> HashMap<String, String> {
     let mut map = HashMap::new();
@@ -24,9 +24,9 @@ pub fn parse_command_line() -> HashMap<String, String> {
     map
 }
 
-pub fn print_state(gridState: &GridState) {
+fn print_grid(grid_state: &GridState) {
     let mut y_counter: usize = 0;
-    gridState.for_each_sequential(|_, y, state| {
+    grid_state.for_each_sequential(|_, y, state| {
         if y_counter == y {
             println!();
             y_counter = y;
@@ -34,4 +34,13 @@ pub fn print_state(gridState: &GridState) {
         print!("{}", if state.is_empty() {"."} else {"X"})
     });
     println!();
+}
+
+fn clear_screen() { 
+    print!("{}[2J", 27 as char);
+} 
+
+pub fn print_grid_state(grid_state: &GridState) {
+    clear_screen();
+    print_grid(grid_state);
 }

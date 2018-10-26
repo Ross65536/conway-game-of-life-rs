@@ -1,17 +1,6 @@
-#[derive(Clone, Copy, Debug)]
-pub enum CellState {
-    Empty,
-    Filled
-}
+// mod cell_state;
 
-impl CellState {
-    pub fn is_empty(&self) -> bool {
-        match self {
-            Empty => true,
-            Filled => false
-        }
-    }
-}
+use game::cell_state::CellState;
 
 #[derive(Debug)]
 pub struct GridState {

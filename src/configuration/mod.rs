@@ -1,4 +1,4 @@
-use grid::GridState;
+use game::grid_state::GridState;
 use std::collections::HashMap;
 
 const X_SIZE: &'static str = "20";
