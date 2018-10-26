@@ -1,4 +1,5 @@
-use game::grid_state::GridState;
+use std::fmt::Debug;
+use std::str::FromStr;
 use std::collections::HashMap;
 
 const X_SIZE: &'static str = "20";
@@ -6,11 +7,24 @@ const Y_SIZE: &'static str = "20";
 
 #[derive(Debug)]
 pub struct Configuration {
-    arguments: HashMap<String, String>
+    x_size: usize,
+    y_size: usize,
 } 
 
-
 impl Configuration {
+    pub fn new(userConfig: &HashMap<String, String>) -> Configuration {
+        let config = Configuration::build_configs(userConfig);
+
+        let x_size: usize = Configuration::parse_arg(&config, "xSize");
+        let y_size: usize = Configuration::parse_arg(&config, "ySize");
+
+        Configuration { x_size: x_size, y_size: y_size } 
+    }
+
+    pub fn get_size(&self) -> (usize, usize) {
+        (self.x_size, self.y_size)
+    }
+
     fn init_deafult_args() -> HashMap<String, String> {
         let mut map = HashMap::new();
         map.insert("xSize", X_SIZE);
@@ -19,28 +33,22 @@ impl Configuration {
         map.iter().map(|p| ((*p.0).into(), (*p.1).into())).collect()
     } 
 
-    pub fn new(configuration: &HashMap<String, String>) -> Configuration {
+    fn build_configs(configuration: &HashMap<String, String>) -> HashMap<String, String> {
         let mut config = Configuration::init_deafult_args();
         configuration.into_iter().for_each(|(k, v)| { 
             config.insert((*k).clone(), (*v).clone()); 
         });
-        Configuration { arguments: config } 
+
+        config
     }
 
-    pub fn build_grid(&self) -> GridState {
-        let x_size: usize = self.arguments.get("xSize".into())
+    fn parse_arg<T>(config: &HashMap<String, String>, arg: &str) -> T where
+         T: FromStr, <T as FromStr>::Err: Debug {
+         config.get(arg.into())
             .unwrap()
             .parse()
-            .unwrap();
-
-        let y_size: usize = self.arguments.get("xSize".into())
             .unwrap()
-            .parse()
-            .unwrap();
-
-        GridState::new_empty(x_size, y_size)
     }
-
 }
 
 

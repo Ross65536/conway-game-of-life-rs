@@ -1,5 +1,3 @@
-// mod cell_state;
-
 use game::cell_state::CellState;
 
 #[derive(Debug)]
