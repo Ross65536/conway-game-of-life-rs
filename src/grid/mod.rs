@@ -4,6 +4,15 @@ pub enum CellState {
     Filled
 }
 
+impl CellState {
+    pub fn is_empty(&self) -> bool {
+        match self {
+            Empty => true,
+            Filled => false
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct GridState {
     x_size: usize,
@@ -23,8 +32,8 @@ impl GridState {
         }
     }
 
-    pub fn for_each_sequential<F>(&self, consumer: F) where 
-        F: Fn(usize, usize, CellState) {
+    pub fn for_each_sequential<F>(&self, mut consumer: F) where 
+        F: FnMut(usize, usize, CellState) {
         for x in 0..self.x_size {
             for y in 0..self.y_size {
                 consumer(x, y, self.cells[x][y])

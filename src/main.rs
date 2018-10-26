@@ -3,7 +3,7 @@ mod grid;
 mod command_line;
 
 use configuration::Configuration;
-use command_line::parse_command_line;
+use command_line::*;
 
 fn main() {
 
@@ -11,6 +11,6 @@ fn main() {
     let config = Configuration::new(&args);
     
     let state = config.build_grid();
-    state.for_each_sequential(|x, y, state| print!("{:?}", state));
+    print_state(&state);
 }
 
