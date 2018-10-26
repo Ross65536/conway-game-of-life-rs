@@ -8,14 +8,15 @@ pub type ScreenUpdater = Fn(&GridState);
 
 pub struct Engine<'a> {
     grid: GridState,
+    config: Configuration,
     screen_updater: &'a ScreenUpdater 
 }
 
 impl<'a> Engine<'a> {
-    pub fn new(update_screen: &'a ScreenUpdater, config: &Configuration) -> Engine<'a> {
+    pub fn new(update_screen: &'a ScreenUpdater, config: Configuration) -> Engine<'a> {
         let (x_size, y_size) = config.get_size();
         let grid = GridState::new_empty(x_size, y_size);
-        Engine { screen_updater: update_screen, grid: grid }
+        Engine { screen_updater: update_screen, grid: grid, config: config }
     }
 
     fn iteration(&mut self) {
@@ -23,10 +24,13 @@ impl<'a> Engine<'a> {
     }
 
     pub fn game_loop(&mut self) {
+        let frametime_ms = self.config.get_frametime_ms();
+
+        (self.screen_updater)(&self.grid);
         loop {
             self.iteration();
             (self.screen_updater)(&self.grid);
-            thread::sleep(Duration::from_millis(1000));
+            thread::sleep(Duration::from_millis(frametime_ms));
         }
     }
 }

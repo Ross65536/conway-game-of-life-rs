@@ -4,11 +4,13 @@ use std::collections::HashMap;
 
 const X_SIZE: &'static str = "20";
 const Y_SIZE: &'static str = "20";
+const FRAME_TIME_MILLIS: &'static str = "1000";
 
 #[derive(Debug)]
 pub struct Configuration {
     x_size: usize,
     y_size: usize,
+    frametime_ms: u64,
 } 
 
 impl Configuration {
@@ -17,18 +19,24 @@ impl Configuration {
 
         let x_size: usize = Configuration::parse_arg(&config, "xSize");
         let y_size: usize = Configuration::parse_arg(&config, "ySize");
+        let frametime: u64 = Configuration::parse_arg(&config, "frameTime");
 
-        Configuration { x_size: x_size, y_size: y_size } 
+        Configuration { x_size: x_size, y_size: y_size, frametime_ms: frametime } 
     }
 
     pub fn get_size(&self) -> (usize, usize) {
         (self.x_size, self.y_size)
     }
 
+    pub fn get_frametime_ms(&self) -> u64 {
+        self.frametime_ms
+    }
+
     fn init_deafult_args() -> HashMap<String, String> {
         let mut map = HashMap::new();
         map.insert("xSize", X_SIZE);
         map.insert("ySize", Y_SIZE);
+        map.insert("frameTime", FRAME_TIME_MILLIS);
 
         map.iter().map(|p| ((*p.0).into(), (*p.1).into())).collect()
     } 

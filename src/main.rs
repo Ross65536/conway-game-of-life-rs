@@ -12,7 +12,7 @@ fn main() {
     let args = parse_command_line(); 
     let config = Configuration::new(&args);
     
-    let mut engine  = Engine::new(&print_grid_state, &config);
+    let mut engine  = Engine::new(&print_grid_state, config);
     engine.game_loop();
 }
 
