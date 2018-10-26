@@ -28,12 +28,12 @@ impl Configuration {
     }
 
     pub fn build_grid(&self) -> GridState {
-        let x_size: u32 = self.arguments.get("xSize".into())
+        let x_size: usize = self.arguments.get("xSize".into())
             .unwrap()
             .parse()
             .unwrap();
 
-        let y_size: u32 = self.arguments.get("xSize".into())
+        let y_size: usize = self.arguments.get("xSize".into())
             .unwrap()
             .parse()
             .unwrap();

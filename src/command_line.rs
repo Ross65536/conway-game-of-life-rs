@@ -21,3 +21,4 @@ pub fn parse_command_line() -> HashMap<String, String> {
 
     map
 }
+
