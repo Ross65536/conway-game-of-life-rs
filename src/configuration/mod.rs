@@ -4,7 +4,7 @@ use std::fmt::Debug;
 use std::str::FromStr;
 use std::collections::HashMap;
 
-const X_SIZE: &'static str = "10";
+const X_SIZE: &'static str = "15";
 const Y_SIZE: &'static str = "10";
 const FRAME_TIME_MILLIS: &'static str = "1000";
 const PATTERN: &'static str = "5,5;6,5;7,5";
