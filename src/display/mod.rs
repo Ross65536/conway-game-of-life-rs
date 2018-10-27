@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::env;
 
-use game::grid_state::GridState;
+use game::game::BoardIter;
 
 const LIVE_CELL: &'static str = "X";
 const DEAD_CELL: &'static str = ".";
@@ -27,15 +27,15 @@ pub fn parse_command_line() -> HashMap<String, String> {
     map
 }
 
-fn print_grid(grid_state: &GridState) {
+fn print_grid(producer: BoardIter) {
     let mut y_counter: usize = 1;
-    grid_state.for_each_sequential(|_, y, has_cell| {
+    for (_, y, has_cell) in producer {
         if y_counter == y {
             println!();
             y_counter += 1;
         }
         print!("{}", if has_cell {LIVE_CELL} else {DEAD_CELL})
-    });
+    }
     println!();
 }
 
@@ -43,7 +43,7 @@ fn clear_screen() {
     print!("{}[2J", 27 as char);
 } 
 
-pub fn print_grid_state(grid_state: &GridState) {
+pub fn print_grid_state(grid_state: BoardIter) {
     clear_screen();
     print_grid(grid_state);
 }

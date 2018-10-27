@@ -1,3 +1,4 @@
 pub mod cell;
-pub mod grid_state;
-pub mod engine;
+pub mod game_state;
+pub mod game_view;
+pub mod game;

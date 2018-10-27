@@ -1,5 +1,4 @@
 use std::vec::IntoIter;
-use std::slice::Iter;
 
 #[derive(PartialEq, Eq, Hash, Debug, Clone, Copy)]
 pub struct Cell {
