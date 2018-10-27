@@ -4,15 +4,17 @@ use std::fmt::Debug;
 use std::str::FromStr;
 use std::collections::HashMap;
 
-const X_SIZE: &'static str = "20";
-const Y_SIZE: &'static str = "20";
+const X_SIZE: &'static str = "10";
+const Y_SIZE: &'static str = "10";
 const FRAME_TIME_MILLIS: &'static str = "1000";
+const PATTERN: &'static str = "5,5;6,5;7,5";
 
 #[derive(Debug)]
 pub struct Configuration {
     x_size: usize,
     y_size: usize,
     frametime_ms: u64,
+    cells: HashSet<Cell>
 } 
 
 impl Configuration {
@@ -23,25 +25,35 @@ impl Configuration {
         let y_size: usize = Configuration::parse_arg(&config, "ySize");
         let frametime: u64 = Configuration::parse_arg(&config, "frameTime");
 
-        Configuration { x_size: x_size, y_size: y_size, frametime_ms: frametime } 
+        let cells = config.get("pattern".into())
+            .unwrap()
+            .split(";")
+            .filter(|s| ! s.is_empty())
+            .map( |point| {
+                println!("{:?}", point);
+                let pair: Vec<i64> = String::from(point)
+                    .split(",")
+                    .map(|num| num.parse().unwrap())
+                    .collect();
+                if pair.len() != 2 {
+                    panic!("Invalid points parameter");
+                }
+                Cell::from((pair[0], pair[1]))
+            }).collect();
+
+        Configuration { x_size: x_size, y_size: y_size, frametime_ms: frametime, cells: cells } 
     }
 
-    pub fn get_size(&self) -> (usize, usize) {
+    pub fn size(&self) -> (usize, usize) {
         (self.x_size, self.y_size)
     }
 
-    pub fn get_frametime_ms(&self) -> u64 {
+    pub fn frametime_ms(&self) -> u64 {
         self.frametime_ms
     }
 
-    pub fn get_cells(&self) -> HashSet<Cell> {
-        let mut set = HashSet::new();
-
-        set.insert((3,3).into());
-        set.insert((4,3).into());
-        set.insert((5,3).into());
-
-        set
+    pub fn cells(&self) -> HashSet<Cell> {
+        self.cells.clone()
     }
 
     fn init_deafult_args() -> HashMap<String, String> {
@@ -49,7 +61,7 @@ impl Configuration {
         map.insert("xSize", X_SIZE);
         map.insert("ySize", Y_SIZE);
         map.insert("frameTime", FRAME_TIME_MILLIS);
-
+        map.insert("pattern", PATTERN);
         map.iter().map(|p| ((*p.0).into(), (*p.1).into())).collect()
     } 
 
@@ -58,6 +70,13 @@ impl Configuration {
         configuration.into_iter().for_each(|(k, v)| { 
             config.insert((*k).clone(), (*v).clone()); 
         });
+
+        let pattern = configuration
+            .keys()
+            .filter(|k| (*k).starts_with("pattern") )
+            .map(|k| configuration.get(k).unwrap())
+            .fold(String::new(), |acum, arg| acum + ";" + arg);
+        config.insert("pattern".into(), pattern);
 
         config
     }

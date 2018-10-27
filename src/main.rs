@@ -10,7 +10,7 @@ fn main() {
     let args = display::parse_command_line();
     let config = Configuration::new(&args);
     
-    let mut engine  = Game::new(&display::print_grid_state, config);
-    engine.game_loop();
+    let mut game = Game::new(&display::print_grid_state, config);
+    game.game_loop();
 }
 
