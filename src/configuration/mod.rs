@@ -1,3 +1,5 @@
+use game::cell::Cell;
+use std::collections::HashSet;
 use std::fmt::Debug;
 use std::str::FromStr;
 use std::collections::HashMap;
@@ -14,8 +16,8 @@ pub struct Configuration {
 } 
 
 impl Configuration {
-    pub fn new(userConfig: &HashMap<String, String>) -> Configuration {
-        let config = Configuration::build_configs(userConfig);
+    pub fn new(user_config: &HashMap<String, String>) -> Configuration {
+        let config = Configuration::build_configs(user_config);
 
         let x_size: usize = Configuration::parse_arg(&config, "xSize");
         let y_size: usize = Configuration::parse_arg(&config, "ySize");
@@ -30,6 +32,10 @@ impl Configuration {
 
     pub fn get_frametime_ms(&self) -> u64 {
         self.frametime_ms
+    }
+
+    pub fn get_cells(&self) -> HashSet<Cell> {
+        HashSet::new()
     }
 
     fn init_deafult_args() -> HashMap<String, String> {

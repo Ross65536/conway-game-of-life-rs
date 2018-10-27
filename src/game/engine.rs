@@ -15,7 +15,7 @@ pub struct Engine<'a> {
 impl<'a> Engine<'a> {
     pub fn new(update_screen: &'a ScreenUpdater, config: Configuration) -> Engine<'a> {
         let (x_size, y_size) = config.get_size();
-        let grid = GridState::new_empty(x_size, y_size);
+        let grid = GridState::new(x_size, y_size, config.get_cells());
         Engine { screen_updater: update_screen, grid: grid, config: config }
     }
 
