@@ -28,11 +28,11 @@ pub fn parse_command_line() -> HashMap<String, String> {
 }
 
 fn print_grid(grid_state: &GridState) {
-    let mut y_counter: usize = 0;
+    let mut y_counter: usize = 1;
     grid_state.for_each_sequential(|_, y, has_cell| {
         if y_counter == y {
             println!();
-            y_counter = y;
+            y_counter += 1;
         }
         print!("{}", if has_cell {LIVE_CELL} else {DEAD_CELL})
     });

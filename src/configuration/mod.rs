@@ -35,7 +35,13 @@ impl Configuration {
     }
 
     pub fn get_cells(&self) -> HashSet<Cell> {
-        HashSet::new()
+        let mut set = HashSet::new();
+
+        set.insert((3,3).into());
+        set.insert((4,3).into());
+        set.insert((5,3).into());
+
+        set
     }
 
     fn init_deafult_args() -> HashMap<String, String> {

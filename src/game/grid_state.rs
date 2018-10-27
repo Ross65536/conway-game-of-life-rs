@@ -24,11 +24,11 @@ impl GridState {
     pub fn for_each_sequential<F>(&self, mut consumer: F) where 
         F: FnMut(usize, usize, bool) {
 
-        for x in 0..self.x_size {
-            for y in 0..self.y_size {
+        for y in 0..self.y_size {
+            for x in 0..self.x_size {
                 let cell = Cell::new(x as i64, y as i64);
-                let hasCell = self.cells.contains(&cell);
-                consumer(x, y, hasCell)
+                let has_cell = self.cells.contains(&cell);
+                consumer(x, y, has_cell)
             }
         }
     }
