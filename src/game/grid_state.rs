@@ -14,6 +14,32 @@ impl GridState {
         GridState { x_size: x_size, y_size: y_size, cells: cells }
     }
 
+    fn count_neighbours(&self, cell: &Cell) -> usize {
+        cell.neighbours_iter().
+            filter(|cell| self.cells.contains(cell))
+            .count()
+    }
+
+    pub fn iterate(&self) -> GridState {
+        let mut suspect_cells = self.cells.clone();
+        self.cells.iter()
+            .for_each(|cell| (*cell).neighbours_iter()
+                    .for_each(|cell| { suspect_cells.insert(cell); })
+            );
+
+        let mut newCells = HashSet::new();
+        for cell in suspect_cells {
+            let num_neighbours = self.count_neighbours(&cell);
+            if  num_neighbours >= 2 && num_neighbours <= 3 {
+                if num_neighbours == 3 || self.cells.contains(&cell) {
+                    newCells.insert(cell);
+                }
+            }
+        }
+
+        GridState::new(self.x_size, self.y_size, newCells)
+    }
+
     fn empty_grid(x_size: usize, y_size: usize) -> Vec<Vec<bool>> {
         let mut empty_cells = Vec::new();
         (0..x_size).for_each(|_| empty_cells.push(vec![false; y_size]));

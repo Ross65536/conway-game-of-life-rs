@@ -19,16 +19,14 @@ impl<'a> Engine<'a> {
         Engine { screen_updater: update_screen, grid: grid, config: config }
     }
 
-    fn iteration(&mut self) {
-        
-    }
+   
 
     pub fn game_loop(&mut self) {
         let frametime_ms = self.config.get_frametime_ms();
 
         (self.screen_updater)(&self.grid);
         loop {
-            self.iteration();
+            self.grid = self.grid.iterate();
             (self.screen_updater)(&self.grid);
             thread::sleep(Duration::from_millis(frametime_ms));
         }

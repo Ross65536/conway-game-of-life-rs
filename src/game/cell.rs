@@ -1,13 +1,10 @@
+use std::vec::IntoIter;
+use std::slice::Iter;
+
 #[derive(PartialEq, Eq, Hash, Debug, Clone, Copy)]
 pub struct Cell {
     x: i64,
     y: i64,
-}
-
-impl Cell {
-    pub fn new(x: i64, y: i64) -> Cell {
-        Cell { x:x, y:y }
-    }
 }
 
 impl<T> From<(T, T)> for Cell 
@@ -16,3 +13,28 @@ impl<T> From<(T, T)> for Cell
         Cell { x: tup.0.into(), y: tup.1.into() }
     }
 }
+
+impl Cell {
+    pub fn new(x: i64, y: i64) -> Cell {
+        Cell { x:x, y:y }
+    }
+
+    pub fn neighbours_iter(&self) -> IntoIter<Cell> {
+        let neighbours = [
+            (self.x + 1, self.y),
+            (self.x + 1, self.y + 1),
+            (self.x, self.y + 1),
+            (self.x - 1, self.y + 1),
+            (self.x - 1, self.y),
+            (self.x - 1, self.y - 1),
+            (self.x, self.y - 1),
+            (self.x + 1, self.y - 1),
+        ];
+
+        neighbours.into_iter()
+            .map(|p| Cell::from(*p))
+            .collect::<Vec<Cell>>()
+            .into_iter()
+    }
+}
+
