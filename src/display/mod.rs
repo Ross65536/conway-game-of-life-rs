@@ -1,16 +1,15 @@
+use std::env::Args;
 use std::collections::HashMap;
-use std::env;
-
 use game::game::BoardIter;
 
 const LIVE_CELL: &'static str = "X";
 const DEAD_CELL: &'static str = ".";
 
-pub fn parse_command_line() -> HashMap<String, String> {
+pub fn parse_command_line(args: Args) -> HashMap<String, String> {
     let mut map = HashMap::new();
 
     let mut key = String::new();
-    for arg in env::args() {
+    for arg in args {
         if arg.starts_with("-") && arg.len() > 1 {
             key = arg.splitn(2, "-").collect();
         } else {
@@ -25,6 +24,11 @@ pub fn parse_command_line() -> HashMap<String, String> {
     }
 
     map
+}
+
+pub fn print_grid_state(grid_state: BoardIter) {
+    clear_screen();
+    print_grid(grid_state);
 }
 
 fn print_grid(producer: BoardIter) {
@@ -43,7 +47,3 @@ fn clear_screen() {
     print!("{}[2J", 27 as char);
 } 
 
-pub fn print_grid_state(grid_state: BoardIter) {
-    clear_screen();
-    print_grid(grid_state);
-}
