@@ -8,7 +8,6 @@ use game_of_life::display::print_grid_state;
 
 fn main() {
     let args = parse_command_line(env::args());
-
     let config = Configuration::new(&args);
     start_animation(config, &print_grid_state);
 }

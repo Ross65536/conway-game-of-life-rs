@@ -1,11 +1,11 @@
-use std::env::Args;
 use std::collections::HashMap;
 use game::game::BoardIter;
 
 const LIVE_CELL: &'static str = "X";
 const DEAD_CELL: &'static str = ".";
 
-pub fn parse_command_line(args: Args) -> HashMap<String, String> {
+pub fn parse_command_line<T>(args: T) -> HashMap<String, String>
+    where T: Iterator<Item = String> {
     let mut map = HashMap::new();
 
     let mut key = String::new();
