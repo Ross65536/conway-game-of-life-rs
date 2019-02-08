@@ -8,12 +8,14 @@ const X_SIZE: &'static str = "15";
 const Y_SIZE: &'static str = "10";
 const FRAME_TIME_MILLIS: &'static str = "1000";
 const PATTERN: &'static str = "5,5;6,5;7,5";
+const NUM_ITERATIONS: &'static str = "0";
 
 #[derive(Debug)]
 pub struct Configuration {
     x_size: usize,
     y_size: usize,
     frametime_ms: u64,
+    num_iterations: usize,
     cells: HashSet<Cell>
 } 
 
@@ -24,13 +26,16 @@ impl Configuration {
         let x_size: usize = Configuration::parse_arg(&config, "xSize");
         let y_size: usize = Configuration::parse_arg(&config, "ySize");
         let frametime: u64 = Configuration::parse_arg(&config, "frameTime");
+        let mut num_iterations: usize = Configuration::parse_arg(&config, "numIterations");
+        if num_iterations == 0 {
+            num_iterations = std::usize::MAX;
+        }
 
         let cells = config.get("pattern".into())
             .unwrap()
             .split(";")
             .filter(|s| ! s.is_empty())
             .map( |point| {
-                println!("{:?}", point);
                 let pair: Vec<i64> = String::from(point)
                     .split(",")
                     .map(|num| num.parse().unwrap())
@@ -41,7 +46,7 @@ impl Configuration {
                 Cell::from((pair[0], pair[1]))
             }).collect();
 
-        Configuration { x_size: x_size, y_size: y_size, frametime_ms: frametime, cells: cells } 
+        Configuration { x_size: x_size, y_size: y_size, frametime_ms: frametime, num_iterations: num_iterations, cells: cells } 
     }
 
     pub fn size(&self) -> (usize, usize) {
@@ -56,12 +61,17 @@ impl Configuration {
         self.cells.clone()
     }
 
+    pub fn num_iterations(&self) -> usize {
+        self.num_iterations
+    }
+
     fn init_deafult_args() -> HashMap<String, String> {
         let mut map = HashMap::new();
         map.insert("xSize", X_SIZE);
         map.insert("ySize", Y_SIZE);
         map.insert("frameTime", FRAME_TIME_MILLIS);
         map.insert("pattern", PATTERN);
+        map.insert("numIterations", NUM_ITERATIONS);
         map.iter().map(|p| ((*p.0).into(), (*p.1).into())).collect()
     } 
 
@@ -73,7 +83,7 @@ impl Configuration {
 
         let pattern = configuration
             .keys()
-            .filter(|k| (*k).starts_with("pattern") )
+            .filter(|k| (*k).starts_with("pattern"))
             .map(|k| configuration.get(k).unwrap())
             .fold(String::new(), |acum, arg| acum + ";" + arg);
         config.insert("pattern".into(), pattern);

@@ -13,7 +13,8 @@ pub struct Game<'a> {
     frametime_ms: u64,
     game_state: GameState,
     game_view: GameView,
-    screen_updater: &'a ScreenUpdater 
+    screen_updater: &'a ScreenUpdater,
+    num_iterations: usize,
 }
 
 impl<'a> Game<'a> {
@@ -27,7 +28,8 @@ impl<'a> Game<'a> {
             screen_updater: update_screen, 
             game_state: game_state, 
             game_view: game_view, 
-            frametime_ms: config.frametime_ms() 
+            frametime_ms: config.frametime_ms(),
+            num_iterations: config.num_iterations(),
         }
     }
 
@@ -39,7 +41,7 @@ impl<'a> Game<'a> {
     pub fn game_loop(&mut self) {
 
         self.update_display();
-        loop {
+        for _ in 0..self.num_iterations {
             self.game_state = self.game_state.iterate();
             self.update_display();
             thread::sleep(Duration::from_millis(self.frametime_ms));
