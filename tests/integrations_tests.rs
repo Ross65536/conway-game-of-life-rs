@@ -1,8 +1,10 @@
 extern crate game_of_life;
+extern crate regex;
 
 use game_of_life::start_animation;
 use game_of_life::display::print_grid_state;
 use game_of_life::display::ScreenUpdater;
+use regex::Regex;
 use std::str;
 
 fn split_command_arguments(line: &'static str) -> impl Iterator<Item = String> {
@@ -11,8 +13,8 @@ fn split_command_arguments(line: &'static str) -> impl Iterator<Item = String> {
 }
 
 #[test]
-fn test_add<'a>() {
-    let args = split_command_arguments("-pattern1 2,2;2,1;2,3 -xSize 5 -ySize 5 -numIterations 3");
+fn test_simple<'a>() {
+    let args = split_command_arguments("-pattern1 1,1;1,0;1,2 -xSize 3 -ySize 3 -numIterations 2 -frameTime 0");
     
     let mut buf: Vec<u8> = Vec::new();
     {
@@ -22,6 +24,10 @@ fn test_add<'a>() {
     }
     
     let output = str::from_utf8(&mut buf).unwrap();
-    print!("{}", output);
-    assert_eq!(1, 1);
+
+    // blinker in regex form, full cycle
+    let expr = r"(\.X\.\s*){3}\s*(\.){3}\s*(X){3}\s*(\.){3}\s*(\.X\.\s*){3}";
+    let regex = Regex::new(expr)
+            .unwrap();
+    assert!(regex.is_match(output));
 }

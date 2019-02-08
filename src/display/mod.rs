@@ -4,6 +4,7 @@ use std::io::Write;
 
 const LIVE_CELL: &'static str = "X";
 const DEAD_CELL: &'static str = ".";
+const NUM_WHITESPACE: u32 = 3;
 
 pub struct ScreenUpdater<'a> {
     out: &'a mut Write,
@@ -43,7 +44,7 @@ pub fn parse_command_line(args: impl Iterator<Item = String>) -> HashMap<String,
 }
 
 pub fn print_grid_state<'a>(out: &'a mut Write, grid_state: BoardIter) {
-    clear_screen();
+    clear_screen(out);
     print_grid(out, grid_state);
 }
 
@@ -51,7 +52,7 @@ fn print_grid<'a>(out: &'a mut Write, producer: BoardIter) {
     let mut y_counter: usize = 1;
     for (_, y, has_cell) in producer {
         if y_counter == y {
-            println!();
+            writeln!(out).unwrap();
             y_counter += 1;
         }
         write!(out, "{}", if has_cell {LIVE_CELL} else {DEAD_CELL}).unwrap();
@@ -59,7 +60,9 @@ fn print_grid<'a>(out: &'a mut Write, producer: BoardIter) {
     writeln!(out).unwrap();
 }
 
-fn clear_screen() { 
-    print!("{}[2J", 27 as char);
+fn clear_screen(out: &mut Write) {
+    for _ in 0..NUM_WHITESPACE {
+        writeln!(out).unwrap();
+    }
 } 
 
