@@ -1,4 +1,7 @@
 # conway-game-of-life-rs
+
+[![Build Status](https://travis-ci.org/Ross65536/conway-game-of-life-rs.svg?branch=master)](https://travis-ci.org/Ross65536/conway-game-of-life-rs)
+
 A rust implementation of ["Conway's Game of life"](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
 ## CLI Examples
