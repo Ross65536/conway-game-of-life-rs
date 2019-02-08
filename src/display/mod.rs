@@ -5,8 +5,23 @@ use std::io::Write;
 const LIVE_CELL: &'static str = "X";
 const DEAD_CELL: &'static str = ".";
 
-pub fn parse_command_line<T>(args: T) -> HashMap<String, String>
-    where T: Iterator<Item = String> {
+pub struct ScreenUpdater<'a> {
+    out: &'a mut Write,
+    updater: &'a mut FnMut(&mut Write, BoardIter),
+}
+
+impl<'a> ScreenUpdater<'a> {
+    pub fn new(out: &'a mut Write, updater: &'a mut FnMut(&mut Write, BoardIter)) -> ScreenUpdater<'a> {
+        ScreenUpdater{ out: out, updater: updater }
+    }
+
+    pub fn print(&mut self, iter: BoardIter) {
+        (self.updater)(&mut self.out, iter);
+    }
+
+}
+
+pub fn parse_command_line(args: impl Iterator<Item = String>) -> HashMap<String, String> {
     let mut map = HashMap::new();
 
     let mut key = String::new();
@@ -27,21 +42,21 @@ pub fn parse_command_line<T>(args: T) -> HashMap<String, String>
     map
 }
 
-pub fn print_grid_state(out: &mut Write, grid_state: BoardIter) {
+pub fn print_grid_state<'a>(out: &'a mut Write, grid_state: BoardIter) {
     clear_screen();
     print_grid(out, grid_state);
 }
 
-fn print_grid(out: &mut Write, producer: BoardIter) {
+fn print_grid<'a>(out: &'a mut Write, producer: BoardIter) {
     let mut y_counter: usize = 1;
     for (_, y, has_cell) in producer {
         if y_counter == y {
             println!();
             y_counter += 1;
         }
-        write!(out, "{}", if has_cell {LIVE_CELL} else {DEAD_CELL});
+        write!(out, "{}", if has_cell {LIVE_CELL} else {DEAD_CELL}).unwrap();
     }
-    writeln!(out);
+    writeln!(out).unwrap();
 }
 
 fn clear_screen() { 
